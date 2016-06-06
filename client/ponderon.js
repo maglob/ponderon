@@ -5,8 +5,10 @@ window.onload = function () {
   input.node().focus()
   input.on('keyup', (e = d3.event) => {
     if (e.keyCode == 13) {
-      process(input.property('value'), output)
-      input.property('value', '')
+      if (!e.shiftKey) {
+        process(input.property('value'), output)
+        input.property('value', '')
+      }
     }
   })
 }
