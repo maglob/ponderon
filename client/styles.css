@@ -9,6 +9,7 @@ div#output {
     position: absolute;
     top: 0;
     background-color: lightblue;
+    white-space: pre;
 }
 
 textarea#console {
