@@ -19,6 +19,7 @@ function process(input, output, error) {
     var result = eval(text)
     output.append("div").attr('class', 'bubble').text(text)
     output.append("div").attr('class', 'bubble output').text(result)
+    output.node().scrollTop = output.node().getBoundingClientRect().height
     error.style('visibility', 'hidden')
     input.property('value', '')
   } catch (e) {
