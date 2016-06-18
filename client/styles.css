@@ -12,6 +12,15 @@ div#output {
     white-space: pre;
 }
 
+div#error {
+    width: 100%;
+    height: auto;
+    background-color: white;
+    visibility: hidden;
+    position: absolute;
+    bottom: 20%;
+}
+
 div.bubble {
     border-radius: 10px;
     border: solid 1px black;
