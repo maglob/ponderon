@@ -4,13 +4,22 @@ body {
 }
 
 div#output {
-    width: 100%;
+    width: 50%;
     height: 80%;
     position: absolute;
     top: 0;
     background-color: lightblue;
     white-space: pre;
     overflow-y: auto;
+}
+
+div#scrapbook {
+    width: 50%;
+    height: 80%;
+    position: absolute;
+    top: 0;
+    right: 0;
+    background-color: lightyellow;
 }
 
 div#error {
