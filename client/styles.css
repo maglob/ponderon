@@ -12,6 +12,18 @@ div#output {
     white-space: pre;
 }
 
+div.bubble {
+    border-radius: 10px;
+    border: solid 1px black;
+    background-color: #ffd0d0;
+    padding: 2px;
+}
+
+div.output {
+    margin-left: 20px;
+    background-color: #d0ffd0;
+}
+
 textarea#console {
     width: 100%;
     height: 20%;

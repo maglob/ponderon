@@ -15,6 +15,6 @@ window.onload = function () {
 
 function process(text, output) {
   var result =  eval(text)
-  output.append("di").text(text)
-  output.append("div").text('> ' + result)
+  output.append("div").attr('class', 'bubble').text(text)
+  output.append("div").attr('class', 'bubble output').text(result)
 }
