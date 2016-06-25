@@ -12,13 +12,12 @@ window.onload = function () {
   input.on('keyup', (e = d3.event) => {
     if (e.keyCode == 13) {
       if (!e.shiftKey) {
-        process(input, output, error)
+        process(input.property('value'))
       }
     }
   })
 
-  scrapbook
-      .on('dragover', (e = d3.event) => {
+  scrapbook.on('dragover', (e = d3.event) => {
         e.preventDefault();
       })
       .on('drop', (e = d3.event) => {
@@ -29,33 +28,41 @@ window.onload = function () {
             .classed('bubble', true)
         e.preventDefault()
       })
+
+  function process(str) {
+    execute(str,
+        function(result) {
+          var bubble = {
+            id: nextBubbleId++,
+            text: str
+          }
+          bubbles[bubble.id] = bubble
+          output.append("div")
+              .text(bubble.text)
+              .classed('bubble', true)
+              .attr('draggable', 'true')
+              .attr('data-id', bubble.id)
+              .on('dragstart', (e = d3.event) => {
+                e.dataTransfer.setData('text/plain', bubble.id)
+                e.dataTransfer.dropEffect = 'copy'
+              })
+          output.append("div")
+              .attr('class', 'bubble output')
+              .text(result)
+              .node().scrollTop = output.node().getBoundingClientRect().height
+          error.style('visibility', 'hidden')
+          input.property('value', '')
+        },
+        function(e) {
+          error.style('visibility', 'visible').text(e)
+        })
+  }
 }
 
-function process(input, output, error) {
+function execute(str, fnSuccess, fnError) {
   try {
-    var text = input.property('value')
-    var result = eval(text)
-    var bubble = {
-      id: nextBubbleId++,
-      text: text
-    }
-    bubbles[bubble.id] = bubble
-    output.append("div")
-        .text(bubble.text)
-        .classed('bubble', true)
-        .attr('draggable', 'true')
-        .attr('data-id', bubble.id)
-        .on('dragstart', (e = d3.event) => {
-          e.dataTransfer.setData('text/plain', bubble.id)
-          e.dataTransfer.dropEffect = 'copy'
-        })
-    output.append("div")
-        .attr('class', 'bubble output')
-        .text(result)
-        .node().scrollTop = output.node().getBoundingClientRect().height
-    error.style('visibility', 'hidden')
-    input.property('value', '')
+    fnSuccess(eval(str))
   } catch (e) {
-    error.style('visibility', 'visible').text(e)
+    fnError(e)
   }
 }
