@@ -2,12 +2,14 @@ var bubbles = {}
 var nextBubbleId = 1
 
 window.onload = function () {
-  var input = d3.select('textarea#console')
-  var output = d3.select('div#output')
-  var error = d3.select('div#error')
-  var scrapbook = d3.select('div#scrapbook')
+  var process = initialize(d3.select('textarea#console'),
+      d3.select('div#output'),
+      d3.select('div#error'),
+      d3.select('div#scrapbook'))
+  process('Math.atan(1) * 4')
+}
 
-  input.style('background-color', '#c0c0c0')
+function initialize(input, output, error, scrapbook) {
   input.node().focus()
   input.on('keyup', (e = d3.event) => {
     if (e.keyCode == 13) {
@@ -29,9 +31,11 @@ window.onload = function () {
         e.preventDefault()
       })
 
+  return process
+
   function process(str) {
     execute(str,
-        function(result) {
+        function (result) {
           var bubble = {
             id: nextBubbleId++,
             text: str
@@ -53,7 +57,7 @@ window.onload = function () {
           error.style('visibility', 'hidden')
           input.property('value', '')
         },
-        function(e) {
+        function (e) {
           error.style('visibility', 'visible').text(e)
         })
   }
