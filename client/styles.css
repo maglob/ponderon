@@ -3,6 +3,10 @@ body {
     padding: 0;
 }
 
+.code {
+    font-family: monospace;
+}
+
 div#output {
     width: 50%;
     height: 80%;
