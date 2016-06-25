@@ -46,10 +46,12 @@ function initialize(input, output, error, scrapbook) {
                 e.dataTransfer.setData('text/plain', bubble.id)
                 e.dataTransfer.dropEffect = 'copy'
               })
-          output.append("div")
-              .attr('class', 'bubble output')
-              .text(result)
-              .node().scrollTop = output.node().getBoundingClientRect().height
+          if (result != undefined) {
+            output.append("div")
+                .attr('class', 'bubble output')
+                .text(typeof result == 'function' ? 'function: ' + result : result)
+                .node().scrollTop = output.node().getBoundingClientRect().height
+          }
           error.style('visibility', 'hidden')
           input.property('value', '')
         },
