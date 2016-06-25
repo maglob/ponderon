@@ -36,11 +36,7 @@ function initialize(input, output, error, scrapbook) {
   function process(str) {
     execute(str,
         function (result) {
-          var bubble = {
-            id: nextBubbleId++,
-            text: str
-          }
-          bubbles[bubble.id] = bubble
+          var bubble = createBubble(str)
           output.append("div")
               .text(bubble.text)
               .classed('bubble', true)
@@ -61,6 +57,15 @@ function initialize(input, output, error, scrapbook) {
           error.style('visibility', 'visible').text(e)
         })
   }
+}
+
+function createBubble(str) {
+  var bubble = {
+    id: nextBubbleId++,
+    text: str
+  }
+  bubbles[bubble.id] = bubble
+  return bubble
 }
 
 function execute(str, fnSuccess, fnError) {
