@@ -12,9 +12,9 @@ window.onload = function () {
 function initialize(input, output, error, scrapbook) {
   input.node().focus()
   input.on('keyup', (e = d3.event) => {
-    if (e.keyCode == 13) {
-      if (!e.shiftKey) {
-        process(input.property('value'))
+    if (e.ctrlKey) {
+      switch (e.keyCode) {
+        case 13: process(input.property('value')); break;
       }
     }
   })
