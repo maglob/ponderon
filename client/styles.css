@@ -7,9 +7,9 @@ body {
     font-family: monospace;
 }
 
-div#output {
-    width: 50%;
-    height: 80%;
+div#notebook {
+    width: 60%;
+    height: 100%;
     position: absolute;
     top: 0;
     background-color: lightblue;
@@ -18,8 +18,8 @@ div#output {
 }
 
 div#scrapbook {
-    width: 50%;
-    height: 80%;
+    width: 40%;
+    height: 100%;
     position: absolute;
     top: 0;
     right: 0;
@@ -45,12 +45,5 @@ div.row {
 div.output {
     margin-left: 20px;
     background-color: #d0ffd0;
-}
-
-textarea#console {
-    width: 100%;
-    height: 20%;
-    position: absolute;
-    bottom: 0;
 }
 
