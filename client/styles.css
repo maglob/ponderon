@@ -35,7 +35,7 @@ div#error {
     bottom: 20%;
 }
 
-div.bubble {
+div.row {
     border-radius: 10px;
     border: solid 1px black;
     background-color: #ffd0d0;

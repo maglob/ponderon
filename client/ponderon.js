@@ -1,5 +1,5 @@
-var bubbles = {}
-var nextBubbleId = 1
+var rows = {}
+var maxRowId = 1
 
 window.onload = function () {
   var process = initialize(d3.select('textarea#console'),
@@ -26,8 +26,8 @@ function initialize(input, output, error, scrapbook) {
         var id = e.dataTransfer.getData('text/plain')
         scrapbook.append("div")
             .attr('data-id', id)
-            .text(bubbles[id].text)
-            .classed('bubble', true)
+            .text(rows[id].text)
+            .classed('row', true)
         e.preventDefault()
       })
 
@@ -36,19 +36,19 @@ function initialize(input, output, error, scrapbook) {
   function process(str) {
     execute(str,
         function (result) {
-          var bubble = createBubble(str)
+          var row = createRow(str)
           output.append("div")
-              .text(bubble.text)
-              .classed('bubble', true)
+              .text(row.text)
+              .classed('row', true)
               .attr('draggable', 'true')
-              .attr('data-id', bubble.id)
+              .attr('data-id', row.id)
               .on('dragstart', (e = d3.event) => {
-                e.dataTransfer.setData('text/plain', bubble.id)
+                e.dataTransfer.setData('text/plain', row.id)
                 e.dataTransfer.dropEffect = 'copy'
               })
           if (result != undefined) {
             output.append("div")
-                .attr('class', 'bubble output')
+                .attr('class', 'row output')
                 .text(typeof result == 'function' ? 'function: ' + result : result)
                 .node().scrollTop = output.node().getBoundingClientRect().height
           }
@@ -61,13 +61,13 @@ function initialize(input, output, error, scrapbook) {
   }
 }
 
-function createBubble(str) {
-  var bubble = {
-    id: nextBubbleId++,
+function createRow(str) {
+  var row = {
+    id: maxRowId++,
     text: str
   }
-  bubbles[bubble.id] = bubble
-  return bubble
+  rows[row.id] = row
+  return row
 }
 
 function execute(str, fnSuccess, fnError) {
