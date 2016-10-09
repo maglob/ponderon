@@ -42,6 +42,16 @@ div.row {
     padding: 2px;
 }
 
+textarea.input {
+    width: 100%;
+    resize: none;
+    background: transparent;
+    border: 0 none white;
+    overflow: hidden;
+    outline: none;
+    font-family: monospace;
+}
+
 div.output {
     margin-left: 20px;
     background-color: #d0ffd0;

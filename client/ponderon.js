@@ -1,126 +1,67 @@
 var rows = []
-var maxRowId = 1
+var maxRowId = 0
 
 window.onload = () => initialize(d3.select('div#notebook'))
 
 function initialize(notebookContainer) {
-  createRow('Math.atan(1) * 4')
+  createRow('Math.atan(1) *\n 4')
+  createRow('100 + 200')
   renderNotebook(notebookContainer, rows)
-  evalRow(notebookContainer.select("div.row div.input"))
 }
 
 function renderNotebook(container, rows) {
-  container.selectAll('div.row').data(rows)
-    .attr('contentEditable', 'true')
-    .text(d => d.text)
+  var r = container.selectAll('div.row').data(rows)
     .enter()
     .append('div')
     .classed('row', true)
-    .attr('data-id', (d) => d.id)
-    .append('div')
-    .attr('contentEditable', 'true')
+    .attr('data-id', d => d.id)
+
+  r.append('textarea')
     .classed('input', true)
     .on('keyup', () => {
-      if (d3.event.ctrlKey && d3.event.keyCode == 13)
-        evalRow(d3.select(d3.event.target))
+      var e = d3.select(d3.event.target)
+      if (d3.event.ctrlKey && d3.event.keyCode == 13) {
+        evalRow(e)
+        renderNotebook(container, rows)
+      }
+      e.attr("rows", (e.property("value").match(/\n/g) || []).length + 1)
     })
-    .text((d) => d.text)
+
+  r.append('div').classed('output', true)
+
+  container.data(rows).selectAll('textarea.input').property("value", d => d.text)
+  container.data(rows).selectAll('div.output').text(d => d.result)
 }
 
 function evalRow(sel) {
-  execute(sel.text(), (result) => {
-    result = typeof result == 'function' ? 'function: ' + result : result
-    d3.select(sel.node().parentNode).selectAll('div.output')
-      .data([result])
-      .text(result)
-      .enter()
-      .append('div')
-      .classed('output', true)
-      .text(result)
-  }, (error) => {
+  var row = rows[d3.select(sel.node().parentNode).attr("data-id")]
+  row.text = sel.property("value")
+  execute(row.text, result => {
+    row.result = typeof result == 'function' ? 'function: ' + result : result
+  }, error => {
     console.log("error", error)
+    row.result = null
   })
-}
-
-function initialize2(input, output, error, scrapbook) {
-  input.node().focus()
-  input.on('keyup', (e = d3.event) => {
-    if (e.ctrlKey) {
-      switch (e.keyCode) {
-        case 13: process(input.property('value')); break;
-      }
-    }
-  })
-
-  scrapbook.on('dragover', (e = d3.event) => {
-        e.preventDefault();
-      })
-      .on('drop', (e = d3.event) => {
-        var id = e.dataTransfer.getData('text/plain')
-        scrapbook.append("div")
-            .attr('data-id', id)
-            .text(rows[id].text)
-            .classed('row', true)
-        e.preventDefault()
-      })
-
-  return process
-
-  function process(str) {
-    execute(str,
-        function (result) {
-          var row = createRow(str)
-          output.append("div")
-              .text(row.text)
-              .classed('row', true)
-              .attr('draggable', 'true')
-              .attr('data-id', row.id)
-              .attr('contentEditable', 'true')
-              .on('dragstart', (e = d3.event) => {
-                e.dataTransfer.setData('text/plain', row.id)
-                e.dataTransfer.dropEffect = 'copy'
-              })
-            .on('keyup', (e = d3.event) => {
-              if (e.ctrlKey) {
-                switch (e.keyCode) {
-                  case 13:
-                    execute(d3.select(e.target).text(), (result) => {
-                      console.log(">", result)
-                      output.append('div')
-                        .attr('class', 'row output')
-                        .text(typeof result == 'function' ? 'function: ' + result : result)
-                        .node().scrollTop = output.node().getBoundingClientRect().height
-                    }, (error) => {
-                      console.log("error", error)
-                    })
-                    break;
-                }
-              }
-            })
-          if (result != undefined) {
-            output.append("div")
-                .attr('class', 'row output')
-                .text(typeof result == 'function' ? 'function: ' + result : result)
-                .node().scrollTop = output.node().getBoundingClientRect().height
-          }
-          error.style('visibility', 'hidden')
-          input.property('value', '')
-        },
-        function (e) {
-          error.style('visibility', 'visible').text(e)
-        })
-  }
 }
 
 function createRow(str) {
   var row = {
     id: maxRowId++,
-    text: str
+    text: str,
+    result: exec(str)
   }
   rows.push(row)
   return row
 }
 
+function exec(str) {
+  console.log(">", str)
+  try {
+    return eval(str)
+  } catch (e) {
+    return null
+  }
+}
 function execute(str, fnSuccess, fnError) {
   try {
     fnSuccess(eval(str))
